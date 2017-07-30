@@ -10,11 +10,11 @@ int main() {
 	fprintf(fh_log, "# 1. FFT size 2. Avg. time per FFT\n# Precision %u bits\n\n", (unsigned) precision);
 	fclose(fh_log);
 
-	init_mfft(precision);
+	mfft_init(precision);
 	mfft_version();
 	mpfr_printf("Variable Precision with %u bits\n", (unsigned) precision);
-	mpfr_printf("Benchmark FFT Performance:\n");
-	for (unsigned int nbits = 6; nbits < 16; nbits++) {
+	mpfr_printf("Benchmark FFT (Danielson-Lanczos) Performance:\n");
+	for (unsigned int nbits = 6; nbits < 11; nbits++) {
 		unsigned int N = 1<<nbits;
 		mpc *f = init_mpc_array(N, precision);
 		mpc *F = init_mpc_array(N, precision);
@@ -38,7 +38,7 @@ int main() {
 		}
 		// run FFTs
 		mfft_plan plan_forward = mfft_create_plan_1d(F, f, nbits, precision, FFT_FORWARD);
-			clock_t	begin = clock();
+		clock_t	begin = clock();
 		for (int k = 0; k < 1<<(19-nbits); k++) {
 			mfft_execute(plan_forward);
 		}

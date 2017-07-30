@@ -1,6 +1,6 @@
 CC=gcc
 FLAGS=-I/home/sdyachen/usr/include -L/home/sdyachen/usr/lib -Ofast -flto
-LFLAGS=-lmfft -lmpfr
+LFLAGS=-lmfft -lmpfr -lpthread
 
 SRCS=main.c
 OBJS=$($SRCS:.c=.o)

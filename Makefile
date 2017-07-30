@@ -9,7 +9,7 @@ INC_PATH=$(HOME)/usr/include
 TARGET=libmfft.so
 
 SOURCES=$(wildcard src/*.c)
-HEADERS=$(wildcard include/*.h)
+HEADERS=$(wildcard src/*.h)
 OBJECTS=$(SOURCES:.c=.o)
 
 .PHONY: all

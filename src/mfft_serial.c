@@ -3,7 +3,7 @@
 static mpc_ptr w;
 static mpc_ptr u, t;
 
-void init_mfft(mpfr_prec_t precision) {
+void mfft_init(mpfr_prec_t precision) {
 	w = init_mpc(precision);
 	u = init_mpc(precision);
 	t = init_mpc(precision);
@@ -16,6 +16,7 @@ mfft_plan mfft_create_plan_1d(mpc_ptr out, mpc_ptr in, unsigned nbits, mpfr_prec
 
 	mpfr_init2(tmp, precision);
 	if (out == in) printf("In-Place Transform");
+	p->nthreads = 1;
 	p->out = out;
 	p->in = in;
 	p->nbits = nbits;
@@ -59,11 +60,6 @@ void mfft_execute(mfft_plan plan) {
 				mpfr_mul(t->im, plan.im, plan.out[k+j+m/2].re, mode);
 				mpfr_fma(t->im, plan.re, plan.out[k+j+m/2].im, t->im, mode);
 
-				//u = W*plan.out[k+j]
-				/*mpfr_mul(u->re, plan.im, plan.out[k+j].im, mode);
-				mpfr_fms(u->re, plan.re, plan.out[k+j].re, u->re, mode);
-				mpfr_mul(u->im, plan.im, plan.out[k+j].re, mode);
-				mpfr_fma(u->im, plan.re, plan.out[k+j].im, u->im, mode);*/
 				//u = plan.out[k+j]
 				mpfr_set(u->re, plan.out[k+j].re, mode);
 				mpfr_set(u->im, plan.out[k+j].im, mode);
@@ -89,4 +85,20 @@ void mfft_execute(mfft_plan plan) {
 }
 
 
+/*
+mpc_ptr recursive_fft(mpc_ptr in, long N) {
+	if (N == 1) {
+		return in;
+	} else {
+		long m = N/2;
+		yt = recursive_fft();
+		yb = recursive_fft();
+		tw = exp(-2.0I*pi/N).^(0:m-1);
+		z = d.*yb;
+		y = [yt + z, yt - z];
+		return y;
+	}
+	
+}
+*/
 
