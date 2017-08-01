@@ -1,6 +1,4 @@
-#ifndef MFFT_HEADER_H
-#include "mfft_header.h"
-#endif
+#include "mpfft_header.h"
 
 static mpfr_t tempr, tempi;
 

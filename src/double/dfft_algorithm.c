@@ -1,7 +1,4 @@
-//#ifndef MFFT_HEADER_H
-//#include "mfft_header.h"
-//#endif
-#include "base_fft.h"
+#include "dfft_header.h"
 
 
 fft_plan fft_create_plan_1d(double complex *in, double complex *out, int n, int isign) {

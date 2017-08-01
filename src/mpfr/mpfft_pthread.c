@@ -1,19 +1,18 @@
-#include "mfft_pthread.h"
-#include <pthread.h>
+#include "mpfft_pthread.h"
 
 static mpc_ptr w;
 static mpc_ptr u, t;
 static thread_data *data;
 
-void mfft_pthread_init(mpfr_prec_t precision) {
+void mpfft_pthread_init(mpfr_prec_t precision) {
 	w = init_mpc(precision);
 	u = init_mpc(precision);
 	t = init_mpc(precision);
 	init_bit_operations(precision);
 }
 
-mfft_plan mfft_pthread_create_plan_1d(mpc_ptr out, mpc_ptr in, int nthreads, unsigned nbits, mpfr_prec_t precision, int isign){
-	mfft_plan *p = malloc(sizeof(mfft_plan));
+mpfft_plan mpfft_pthread_create_plan_1d(mpc_ptr out, mpc_ptr in, int nthreads, unsigned nbits, mpfr_prec_t precision, int isign){
+	mpfft_plan *p = malloc(sizeof(mpfft_plan));
 	mpfr_t tmp;
 
 	mpfr_init2(tmp, precision);
@@ -37,7 +36,7 @@ mfft_plan mfft_pthread_create_plan_1d(mpc_ptr out, mpc_ptr in, int nthreads, uns
 	return *p;
 }
 
-void mfft_pthread_destroy_plan(mfft_plan *plan) {
+void mpfft_pthread_destroy_plan(mpfft_plan *plan) {
 	mpc_clear_array(plan->W, plan->nbits);
 	mpfr_clear(plan->re);
 		mpfr_clear(plan->im);
@@ -45,7 +44,7 @@ void mfft_pthread_destroy_plan(mfft_plan *plan) {
 }
 
 
-void mfft_pthread_execute(mfft_plan plan) {
+void mpfft_pthread_execute(mpfft_plan plan) {
 	mpfr_bit_reverse_copy(plan.out, plan.in, plan.nbits);
 	int n = 1<<plan.nbits;
 
@@ -205,7 +204,7 @@ void *thread(void *arg) {
 	pthread_exit(NULL);
 }
 
-void mfft_pthread_example(const int nthreads, mpfr_prec_t precision) {
+void mpfft_pthread_example(const int nthreads, mpfr_prec_t precision) {
 	pthread_t     tid[nthreads];
 	data = malloc(nthreads*sizeof(thread_data));
 	int nbits = 20;

@@ -1,25 +1,21 @@
-//#ifndef MFFT_HEADER_H
-//#include "mfft_header.h"
-//#endif
-#include "mfft_serial.h"
+#include "mpfft_serial.h"
 
 static mpc_ptr w;
 static mpc_ptr u, t;
 
-void mfft_init(mpfr_prec_t precision) {
+void mpfft_init(mpfr_prec_t precision) {
 	w = init_mpc(precision);
 	u = init_mpc(precision);
 	t = init_mpc(precision);
 	init_bit_operations(precision);
 }
 
-mfft_plan mfft_create_plan_1d(mpc_ptr out, mpc_ptr in, unsigned nbits, mpfr_prec_t precision, int isign){
-	mfft_plan *p = malloc(sizeof(mfft_plan));
+mpfft_plan mpfft_create_plan_1d(mpc_ptr out, mpc_ptr in, unsigned nbits, mpfr_prec_t precision, int isign){
+	mpfft_plan *p = malloc(sizeof(mpfft_plan));
 	mpfr_t tmp;
 
 	mpfr_init2(tmp, precision);
 	if (out == in) printf("In-Place Transform");
-	p->nthreads = 1;
 	p->out = out;
 	p->in = in;
 	p->nbits = nbits;
@@ -38,15 +34,15 @@ mfft_plan mfft_create_plan_1d(mpc_ptr out, mpc_ptr in, unsigned nbits, mpfr_prec
 	return *p;
 }
 
-void mfft_destroy_plan(mfft_plan *plan) {
-	mpc_clear_array(plan->W, plan->nbits);
-	mpfr_clear(plan->re);
-	mpfr_clear(plan->im);
+void mpfft_destroy_plan(mpfft_plan plan) {
+	mpc_clear_array(plan.W, plan.nbits);
+	mpfr_clear(plan.re);
+	mpfr_clear(plan.im);
 	//free(plan);
 }
 
 
-void mfft_execute(mfft_plan plan) {
+void mpfft_execute(mpfft_plan plan) {
 	mpfr_bit_reverse_copy(plan.out, plan.in, plan.nbits);
 	int n = 1<<plan.nbits;
 
@@ -87,21 +83,4 @@ void mfft_execute(mfft_plan plan) {
 	}
 }
 
-
-/*
-mpc_ptr recursive_fft(mpc_ptr in, long N) {
-	if (N == 1) {
-		return in;
-	} else {
-		long m = N/2;
-		yt = recursive_fft();
-		yb = recursive_fft();
-		tw = exp(-2.0I*pi/N).^(0:m-1);
-		z = d.*yb;
-		y = [yt + z, yt - z];
-		return y;
-	}
-	
-}
-*/
 

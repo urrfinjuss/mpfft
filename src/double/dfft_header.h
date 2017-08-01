@@ -1,6 +1,4 @@
-#ifndef MFFT_HEADER_H
-#include "mfft_header.h"
-#endif
+#include "../base/header.h"
 #include <math.h>
 #include <complex.h>
 

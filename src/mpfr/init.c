@@ -1,7 +1,4 @@
-#ifndef MFFT_HEADER_H
-#include "mfft_header.h"
-#endif
-
+#include "mpfft_header.h"
 
 mpc_ptr init_mpc(mpfr_prec_t precision) {
 	mpc_ptr in = malloc(sizeof(mpc));

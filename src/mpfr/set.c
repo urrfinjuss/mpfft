@@ -1,6 +1,4 @@
-#ifndef MFFT_HEADER_H
-#include "mfft_header.h"
-#endif
+#include "mpfft_header.h"
 
 void mpc_set_c(mpc_ptr in, mpc_ptr z){
 	mpfr_set(in->re, z->re, MODE);
