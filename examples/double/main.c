@@ -1,15 +1,19 @@
 #include <stdio.h>
 #include <string.h>
-#include <base_fft.h>
+#include <dfft_header.h>
 #include <math.h>
 #include <complex.h>
 #include <time.h>
 
+#define DFFT_RECURSIVE 1
+#define DFFT_DANIELSON_LANCZOS 2
+
 int main() {
-	mfft_version();
+	mpfft_version();
 	double complex *y, *x;
 	double t;
-	unsigned int n = 1024;
+	unsigned nbits = 10;
+	int n = 1<<nbits;
 	FILE *fh = fopen("init.txt","w");
 	fprintf(fh, "# 1. x 2. y\n\n");
 
@@ -21,7 +25,7 @@ int main() {
 		fprintf(fh, "%17.12e\t%17.12e\t%17.12e\n", t, creal(x[j]), cimag(x[j]));
 	}
 	fclose(fh);
-	fft_plan plan = fft_create_plan_1d(x, y, n, 1);
+	fft_plan plan = fft_create_plan_1d(x, y, nbits, 1, DFFT_DANIELSON_LANCZOS);
 	fft_execute(plan);
 
 	int k;

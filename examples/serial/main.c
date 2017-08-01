@@ -1,18 +1,14 @@
-#include <stdio.h>
-#include <mfft_serial.h>
-//#include <math.h>
-//#include <complex.h>
-#include <time.h>
+#include <mpfft_serial.h>
 
 
 int main() {
-	FILE *fh_log = fopen("mfft_bench.log","a");
+	FILE *fh_log = fopen("mpfft_bench.log","a");
 	const mpfr_prec_t precision = 128;
 	fprintf(fh_log, "# 1. FFT size 2. Avg. time per FFT\n# Precision %u bits\n\n", (unsigned) precision);
 	fclose(fh_log);
 
-	mfft_init(precision);
-	mfft_version();
+	mpfft_init(precision);
+	mpfft_version();
 	mpfr_printf("Variable Precision with %u bits\n", (unsigned) precision);
 	mpfr_printf("Benchmark FFT (Danielson-Lanczos) Performance:\n");
 	for (unsigned int nbits = 6; nbits < 11; nbits++) {
@@ -38,19 +34,19 @@ int main() {
 			mpfr_set_ui(f[j].im, 0, MPFR_RNDN);
 		}
 		// run FFTs
-		mfft_plan plan_forward = mfft_create_plan_1d(F, f, nbits, precision, FFT_FORWARD);
+		mpfft_plan plan_forward = mpfft_create_plan_1d(F, f, nbits, precision, FFT_FORWARD);
 		clock_t	begin = clock();
 		for (int k = 0; k < 1<<(19-nbits); k++) {
-			mfft_execute(plan_forward);
+			mpfft_execute(plan_forward);
 		}
 		clock_t	end = clock();
 		double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 		//printf("Completed %5d size %4d FFTS in %8.3f secs. Average time per FFT %10.5f ms\n", 1<<(17-nbits), N, time_spent, 1e+3*time_spent/(1<<(17-nbits)));
 		printf("Size %5d FFTS in %8.3f secs. Average time per FFT %10.5f ms\n", N, time_spent, 1e+3*time_spent/(1<<(19-nbits)));
-		fh_log = fopen("mfft_bench.log","a");
+		fh_log = fopen("mpfft_bench.log","a");
 		fprintf(fh_log, "%5d\t%15.10f\n", N, 1e+3*time_spent/(1<<(19-nbits)));
 		fclose(fh_log);
-		mfft_destroy_plan(&plan_forward);
+		mpfft_destroy_plan(plan_forward);
 		mpfr_clear(x);
 		mpfr_clear(y);
 		mpfr_clear(scale);
@@ -65,7 +61,7 @@ int main() {
 		mpc_clear_array(F, N);
 	}
 
-	fh_log = fopen("mfft_bench.log","a");
+	fh_log = fopen("mpfft_bench.log","a");
 	fprintf(fh_log, "\n\n");
 	fclose(fh_log);
 

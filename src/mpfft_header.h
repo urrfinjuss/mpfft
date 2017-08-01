@@ -1,9 +1,7 @@
 #ifndef MPFFT_HEADER_H
-#define FFT_FORWARD	-1
-#define FFT_BACKWARD	+1
 #define MODE MPFR_RNDN
 #define MPFFT_HEADER_H
-#include "../base/header.h"
+#include "header.h"
 #include <gmp.h>
 #include <mpfr.h>
 

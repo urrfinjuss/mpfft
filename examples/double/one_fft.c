@@ -1,12 +1,14 @@
 #include <stdio.h>
-#include <base_fft.h>
+#include <dfft_header.h>
 #include <math.h>
 #include <complex.h>
 #include <time.h>
 
+#define DFFT_RECURSIVE 1
+#define DFFT_DANIELSON_LANCZOS 2
 
 int main() {
-	mfft_version();
+	mpfft_version();
 	int nbits = 4;
 	int N = 1<<nbits;
 	double complex *f = malloc(N*sizeof(double complex));
@@ -21,7 +23,7 @@ int main() {
 	}
 	printf("\n");
 	// run FFTs
-	fft_plan plan_forward = fft_create_plan_1d(f, F, N, FFT_FORWARD);
+	fft_plan plan_forward = fft_create_plan_1d(f, F, N, FFT_FORWARD, DFFT_RECURSIVE);
 	fft_execute(plan_forward);
 	fft_destroy_plan(plan_forward);
 
