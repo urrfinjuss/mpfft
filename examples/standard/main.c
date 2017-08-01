@@ -4,7 +4,6 @@
 #include <math.h>
 #include <complex.h>
 #include <time.h>
-#include <mfft.h>
 
 int main() {
 	mfft_version();

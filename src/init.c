@@ -1,4 +1,6 @@
-#include "mfft.h"
+#ifndef MFFT_HEADER_H
+#include "mfft_header.h"
+#endif
 
 
 mpc_ptr init_mpc(mpfr_prec_t precision) {

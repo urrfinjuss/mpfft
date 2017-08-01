@@ -1,10 +1,8 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-//#include <mfft.h>
+#ifndef MFFT_HEADER_H
+#include "mfft_header.h"
+#endif
 #include <math.h>
 #include <complex.h>
-#include <time.h>
 
 typedef struct {
 	int n;

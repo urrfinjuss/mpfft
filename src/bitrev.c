@@ -1,4 +1,6 @@
-#include "mfft.h"
+#ifndef MFFT_HEADER_H
+#include "mfft_header.h"
+#endif
 
 static mpfr_t tempr, tempi;
 
@@ -19,12 +21,12 @@ void mpfr_bit_reverse(mpc_ptr in, unsigned nbits) {
 		nreversed <<= count;
 		nreversed &= (1<<nbits) - 1;
 		if (n < nreversed) {
-			mpfr_set(tempr, in[n].re, mode);
-			mpfr_set(tempi, in[n].im, mode);
-			mpfr_set(in[n].re, in[nreversed].re, mode);
-			mpfr_set(in[n].im, in[nreversed].im, mode);
-			mpfr_set(in[nreversed].re, tempr, mode);
-			mpfr_set(in[nreversed].im, tempi, mode);
+			mpfr_set(tempr, in[n].re, MODE);
+			mpfr_set(tempi, in[n].im, MODE);
+			mpfr_set(in[n].re, in[nreversed].re, MODE);
+			mpfr_set(in[n].im, in[nreversed].im, MODE);
+			mpfr_set(in[nreversed].re, tempr, MODE);
+			mpfr_set(in[nreversed].im, tempi, MODE);
 		}
 	}
 }
@@ -32,8 +34,8 @@ void mpfr_bit_reverse(mpc_ptr in, unsigned nbits) {
 void mpfr_bit_reverse_copy(mpc_ptr out, mpc_ptr in, unsigned nbits) {
 	if (out == in) printf("Error: In-Place Transform!\n");
 	for (int j = 0; j < 1<<nbits; j++) {
-		mpfr_set(out[j].re, in[j].re, mode);
-		mpfr_set(out[j].im, in[j].im, mode);
+		mpfr_set(out[j].re, in[j].re, MODE);
+		mpfr_set(out[j].im, in[j].im, MODE);
 	}
 	mpfr_bit_reverse(out, nbits);
 }
