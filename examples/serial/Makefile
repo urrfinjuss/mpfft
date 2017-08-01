@@ -1,6 +1,6 @@
 CC=gcc
-FLAGS=-I/home/sdyachen/usr/include -L/home/sdyachen/usr/lib -Ofast -flto
-LFLAGS=-lmfft -lmpfr -lpthread
+FLAGS= -std=gnu99 -I/home/orange/usr/include -L/home/orange/usr/lib -Ofast -flto
+LFLAGS=-lmfft -lmpfr -lpthread -lm
 
 SRCS=main.c
 OBJS=$($SRCS:.c=.o)

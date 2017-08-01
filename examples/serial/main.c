@@ -1,6 +1,7 @@
 #include <stdio.h>
-#include <mfft.h>
-#include <math.h>
+#include <mfft_serial.h>
+//#include <math.h>
+//#include <complex.h>
 #include <time.h>
 
 

@@ -4,7 +4,7 @@
 #include "base_fft.h"
 
 
-fft_plan fft_create_plan(double complex *in, double complex *out, int n, int isign) {
+fft_plan fft_create_plan_1d(double complex *in, double complex *out, int n, int isign) {
 	fft_plan *plan = malloc(sizeof(fft_plan));
 	plan->n = n;
 	plan->isign = isign;
@@ -29,7 +29,11 @@ void fft_recursive(double complex *buf, double complex *out, int n, int stride) 
 	}
 }
 
-void call_fft(fft_plan plan) {
+void fft_execute(fft_plan plan) {
 	fft_recursive(plan.out, plan.tmp, plan.n, 1);
+}
+
+void fft_destroy_plan(fft_plan plan) {
+	free(plan.tmp);
 }
 

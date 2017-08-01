@@ -21,8 +21,8 @@ int main() {
 		fprintf(fh, "%17.12e\t%17.12e\t%17.12e\n", t, creal(x[j]), cimag(x[j]));
 	}
 	fclose(fh);
-	fft_plan plan = fft_create_plan(x, y, n, 1);
-	call_fft(plan);
+	fft_plan plan = fft_create_plan_1d(x, y, n, 1);
+	fft_execute(plan);
 
 	int k;
 	fh = fopen("fft.txt","w");

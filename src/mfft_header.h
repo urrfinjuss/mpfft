@@ -7,6 +7,8 @@
 #include <time.h>
 #include <gmp.h>
 #include <mpfr.h>
+//#include <math.h>
+//#include <complex.h>
 
 typedef struct mp_complex {
 	mpfr_t	re;
