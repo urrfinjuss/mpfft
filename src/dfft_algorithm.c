@@ -11,13 +11,9 @@ fft_plan fft_create_plan_1d(double complex *in, double complex *out, unsigned nb
 	plan->W = malloc(nbits*sizeof(double complex));
 	plan->FFT_TYPE = FFT_TYPE;
 	if (FFT_TYPE == 1) {
-		printf("Recursive FFT algorithm.\n");
 		plan->tmp = malloc((1<<nbits)*sizeof(double complex));
-		memcpy(plan->tmp, plan->in, (1<<nbits)*sizeof(double complex));
-		memcpy(plan->out, plan->in, (1<<nbits)*sizeof(double complex));
 		return *plan;
 	} else if (FFT_TYPE == 2) {
-		printf("Danielson-Lanczos FFT algorithm.\n");
 		double complex tmp;
 		for (unsigned s = 0; s < nbits; s++) {
 			tmp = M_PI/(1<<s);
@@ -64,6 +60,8 @@ void fft_danielson_lanczos(fft_plan plan) {
 void fft_execute(fft_plan plan) {
 	int n = 1 << plan.nbits;
 	if (plan.FFT_TYPE == 1) {
+		memcpy(plan.tmp, plan.in, n*sizeof(double complex));
+		memcpy(plan.out, plan.in, n*sizeof(double complex));
 		fft_recursive(plan.out, plan.tmp, n, 1);
 	} else if (plan.FFT_TYPE == 2) {
 		fft_danielson_lanczos(plan);

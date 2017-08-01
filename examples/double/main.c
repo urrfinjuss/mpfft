@@ -12,7 +12,7 @@ int main() {
 	mpfft_version();
 	double complex *y, *x;
 	double t;
-	unsigned nbits = 10;
+	unsigned nbits = 16;
 	int n = 1<<nbits;
 	FILE *fh = fopen("init.txt","w");
 	fprintf(fh, "# 1. x 2. y\n\n");
@@ -25,8 +25,35 @@ int main() {
 		fprintf(fh, "%17.12e\t%17.12e\t%17.12e\n", t, creal(x[j]), cimag(x[j]));
 	}
 	fclose(fh);
+	
+	int ntimes = 2;
+	struct timespec begin, end;
+	double elapsed;
+
+	
 	fft_plan plan = fft_create_plan_1d(x, y, nbits, 1, DFFT_DANIELSON_LANCZOS);
-	fft_execute(plan);
+	clock_gettime(CLOCK_MONOTONIC, &begin);
+	for (int j = 0; j < ntimes; j++) {
+		fft_execute(plan);
+	}	
+	clock_gettime(CLOCK_MONOTONIC, &end);
+	elapsed = end.tv_sec - begin.tv_sec;
+	elapsed += (end.tv_nsec - begin.tv_nsec) / 1000000000.0;
+	printf("Danielson-Lanczos FFT algorithm:\t");
+	printf("avg time for size %d FFT %.2f ms\n", n, 1e+3*elapsed/ntimes);	
+	
+	
+	fft_plan plan1 = fft_create_plan_1d(x, y, nbits, 1, DFFT_RECURSIVE);
+	clock_gettime(CLOCK_MONOTONIC, &begin);
+	for (int j = 0; j < ntimes; j++) {
+		fft_execute(plan1);
+	}	
+	clock_gettime(CLOCK_MONOTONIC, &end);
+	elapsed = end.tv_sec - begin.tv_sec;
+	elapsed += (end.tv_nsec - begin.tv_nsec) / 1000000000.0;
+	printf("Recursive FFT algorithm:\t\t");
+	printf("avg time for size %d FFT %.2f ms\n", n, 1e+3*elapsed/ntimes);	
+	
 
 	int k;
 	fh = fopen("fft.txt","w");
