@@ -2,7 +2,7 @@ CC=gcc
 RM=rm -f
 LIB_PATH=$(HOME)/usr/lib
 INC_PATH=$(HOME)/usr/include
-FLAGS=-std=gnu99 -march=native -Ofast -I/home/orange/code/mpfft/src/ -I$(INC_PATH)
+FLAGS=-std=gnu99 -march=native -O2 -I/home/orange/code/mpfft/src/ -I$(INC_PATH)
 CFLAGS=-std=gnu99 -fPIC -Wall -Wextra -g -I/home/orange/code/mpfft/src/ -I$(INC_PATH)
 LDFLAGS=-shared
 

@@ -10,11 +10,16 @@ fft_plan fft_create_plan_1d(double complex *in, double complex *out, unsigned nb
 	plan->isign = isign;
 	plan->W = malloc(nbits*sizeof(double complex));
 	plan->FFT_TYPE = FFT_TYPE;
-	if (FFT_TYPE == 1) {
-		plan->tmp = malloc((1<<nbits)*sizeof(double complex));
-		return *plan;
-	} else if (FFT_TYPE == 2) {
+	if (FFT_TYPE == 1) { // Recursive
 		double complex tmp;
+		plan->tmp = malloc((1<<nbits)*sizeof(double complex));
+		for (unsigned s = 0; s < nbits; s++) {
+			tmp = M_PI/(1<<s);
+			plan->W[s] = cexp(1.I*tmp*isign);
+ 		}	
+		return *plan;
+	} else if (FFT_TYPE == 2) { // Danielson-Lanczos
+		double complex tmp; 
 		for (unsigned s = 0; s < nbits; s++) {
 			tmp = M_PI/(1<<s);
 			plan->W[s] = cexp(1.I*tmp*isign);
@@ -27,15 +32,27 @@ fft_plan fft_create_plan_1d(double complex *in, double complex *out, unsigned nb
 }
 
 
-void fft_recursive(double complex *buf, double complex *out, int n, int stride) {
+//fft_recursive(plan.out, plan.tmp, n, 1);
+//static double complex t  = 1;
+//void fft_recursive(double complex *out, double complex *tmp, int n, int stride) {
+static int S = 0;
+void fft_recursive(double complex *out, double complex *tmp, double complex *tw, int n, int stride) {
 	if (stride < n) {
-		fft_recursive(out, buf, n, 2*stride);
-		fft_recursive(out + stride, buf + stride, n, 2*stride);
+		fft_recursive(tmp, out, tw, n, 2*stride);
+		fft_recursive(tmp + stride, out + stride, tw, n, 2*stride);
+		double complex t0 = cexp(-2.I*M_PI*stride/n);
+		double complex t = 1;
+		//int ss = 0;
 		for (int j = 0; j < n; j += 2*stride) {
-			double complex t = cexp(-1.I*M_PI*j/n)*out[j+stride];
-			buf[j/2]     = out[j] + t;
-			buf[(j+n)/2] = out[j] - t;
+			//double complex t = cexp(-1.I*M_PI*j/n)*out[j+stride];
+			//double complex t = cexp(-1.I*M_PI*j/n);
+			out[j/2]     = tmp[j] + t*tmp[j+stride];
+			out[(j+n)/2] = tmp[j] - t*tmp[j+stride];
+			//t = t*tw[S];
+			t = t*t0;
 		}
+		//printf("ss = %d\n", S);
+		//S++;
 	}
 }
 
@@ -62,7 +79,9 @@ void fft_execute(fft_plan plan) {
 	if (plan.FFT_TYPE == 1) {
 		memcpy(plan.tmp, plan.in, n*sizeof(double complex));
 		memcpy(plan.out, plan.in, n*sizeof(double complex));
-		fft_recursive(plan.out, plan.tmp, n, 1);
+		S = 0;
+		fft_recursive(plan.out, plan.tmp, plan.W, n, 1);
+		//fft_recursive(plan.out, plan.tmp, n, 1);
 	} else if (plan.FFT_TYPE == 2) {
 		fft_danielson_lanczos(plan);
 	}

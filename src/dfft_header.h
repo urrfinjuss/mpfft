@@ -15,7 +15,7 @@ typedef struct {
 
 // dfft_algorithm.c
 extern fft_plan fft_create_plan_1d(double complex *in, double complex *out, unsigned nbits, int isign, int FFT_TYPE);
-extern void fft_recursive(double complex *buf, double complex *out, int n, int stride);
+extern void fft_recursive(double complex *buf, double complex *out, double complex *tw, int n, int stride);
 extern void fft_execute(fft_plan plan);
 extern void fft_destroy_plan(fft_plan plan);
 

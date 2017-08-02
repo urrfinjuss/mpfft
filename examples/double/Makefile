@@ -1,6 +1,6 @@
 CC=gcc
 FLAGS=-std=gnu99 -I/home/orange/usr/include -L/home/orange/usr/lib -Ofast -flto
-LFLAGS=-lmpfft -lmpfr -lpthread -lm
+LFLAGS=-lmpfft -lmpfr -lpthread -lfftw3 -lm
 
 SRCS1=main.c
 SRCS2=one_fft.c
