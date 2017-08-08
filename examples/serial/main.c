@@ -17,9 +17,7 @@ int main() {
 		mpc *F = init_mpc_array(N, precision);
 		// set initial data
 		mpfr_t x, y, scale;
-		mpfr_init2(x, precision);
-		mpfr_init2(y, precision);
-		mpfr_init2(scale, precision);
+		mpfr_inits2(precision, x, y, scale, (mpfr_ptr) NULL);
 		mpfr_const_pi(scale, MPFR_RNDN);
 		mpfr_div_ui(scale, scale, 1 << (nbits-1), MPFR_RNDN);
 		for (int j = 0; j < N; j++) {

@@ -6,6 +6,7 @@
 #endif
 typedef struct {
 	unsigned nbits;
+	unsigned int inplace;
 	int	dir;
 	mpfr_prec_t prec;
 	mpfr_t	re, im;

@@ -15,7 +15,7 @@ mpfft_plan mpfft_create_plan_1d(mpc_ptr out, mpc_ptr in, unsigned nbits, mpfr_pr
 	mpfr_t tmp;
 
 	mpfr_init2(tmp, precision);
-	if (out == in) printf("In-Place Transform");
+	if (out == in) p->inplace = 1;
 	p->out = out;
 	p->in = in;
 	p->nbits = nbits;
@@ -38,12 +38,12 @@ void mpfft_destroy_plan(mpfft_plan plan) {
 	mpc_clear_array(plan.W, plan.nbits);
 	mpfr_clear(plan.re);
 	mpfr_clear(plan.im);
-	//free(plan);
 }
 
 
 void mpfft_execute(mpfft_plan plan) {
-	mpfr_bit_reverse_copy(plan.out, plan.in, plan.nbits);
+	if (plan.inplace) mpfr_bit_reverse(plan.out, plan.nbits);
+	else mpfr_bit_reverse_copy(plan.out, plan.in, plan.nbits);
 	int n = 1<<plan.nbits;
 
 	for (unsigned s = 0; s < plan.nbits; s++) {
