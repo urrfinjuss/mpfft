@@ -4,6 +4,7 @@
 #include "math_constants.h"
 
 #include"cuComplex.h"
+#include <stdlib.h>
 #include <stdio.h>
 
 
@@ -28,14 +29,25 @@ __global__ void ddftKernel(unsigned nbits, unsigned nthreads, cuDoubleComplex* o
 
 int main()
 {
-	//Create test
-	cuDoubleComplex* in;
-	cuDoubleComplex* out;
+	unsigned nthreads = 16;
+	unsigned nbits = 10;
 
-	unsigned nthreads;
-	unsigned nbits;
+	//Create test
+	cuDoubleComplex* in = (cuDoubleComplex*)malloc(1 << nbits * sizeof(cuDoubleComplex));
+	cuDoubleComplex* out = (cuDoubleComplex*)malloc(1 << nbits * sizeof(cuDoubleComplex));
+
+	FILE *fh = fopen("init.txt", "w");
+	for (unsigned i = 0; i < 1 << nbits; ++i)
+	{
+		in[i].x = sin(2. * i * CUDART_PI / (1 << nbits));
+		in[i].y = 0;
+		fprintf(fh, "%19.12e\t%19.12e\t%19.12e\n", 2.*CUDART_PI*i / (1 << nbits), in[i].x, in[i].y);
+	}
+	fclose(fh);
+
 
 	//Measure time
+
 
     cudaError_t cudaStatus = cudaDDFT(nbits, nthreads, out, in);
     if (cudaStatus != cudaSuccess) {
@@ -43,7 +55,12 @@ int main()
         return 1;
     }
 
-	//Check results
+	fh = fopen("output.txt", "w");
+	for (unsigned i = 0; i < 1 << nbits; ++i)
+	{
+		fprintf(fh, "%19.12e\t%19.12e\t%19.12e\n", 2.*CUDART_PI*i / (1 << nbits), out[i].x, out[i].y);
+	}
+	fclose(fh);
 
     // cudaDeviceReset must be called before exiting in order for profiling and
     // tracing tools such as Nsight and Visual Profiler to show complete traces.
@@ -64,7 +81,7 @@ cudaError_t cudaDDFT(unsigned nbits, unsigned nthreads, cuDoubleComplex * out, c
 	cuDoubleComplex* dev_W;
 	cuDoubleComplex* W;
 
-	W = (cuDoubleComplex*)malloc(1 << nbits * sizeof(cuDoubleComplex));
+	W = (cuDoubleComplex*)malloc((1 << nbits) * sizeof(cuDoubleComplex));
 	// (serial n^2) algorithm prepare twiddle factors
 	double phs = -2.0*CUDART_PI / (1 << nbits);
 	for (int s = 0; s < (1 << nbits); s++) 
