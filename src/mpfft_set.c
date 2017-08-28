@@ -1,21 +1,21 @@
 #include "mpfft_header.h"
 
-void mpc_set_c(mpc_ptr in, mpc_ptr z){
+void mpc_set_c(mpfc_ptr in, mpfc_ptr z){
 	mpfr_set(in->re, z->re, MODE);
 	mpfr_set(in->im, z->im, MODE);
 }
 
-void mpc_set(mpc_ptr in, mpfr_t x, mpfr_t y){
+void mpc_set(mpfc_ptr in, mpfr_t x, mpfr_t y){
 	mpfr_set(in->re, x, MODE);
 	mpfr_set(in->im, y, MODE);
 }
 
-void mpc_set_d(mpc_ptr in, double x, double y){
+void mpc_set_d(mpfc_ptr in, double x, double y){
 	mpfr_set_d(in->re, x, MODE);
 	mpfr_set_d(in->im, y, MODE);
 }
 
-void bit_reversal(mpc_ptr in, int N, mpfr_prec_t precision) {
+void bit_reversal(mpfc_ptr in, int N, mpfr_prec_t precision) {
 	mpfr_t tempr, tempi;
 	mpfr_init2(tempr, precision);
 	mpfr_init2(tempi, precision);

@@ -10,8 +10,8 @@ typedef struct {
 	int	dir;
 	mpfr_prec_t prec;
 	mpfr_t	re, im;
-	mpc_ptr	in, out;
-	mpc_ptr	W;
+	mpfc_ptr	in, out;
+	mpfc_ptr	W;
 } mpfft_plan;
 #endif
 
@@ -19,5 +19,5 @@ typedef struct {
 extern void mpfft_init(mpfr_prec_t precision); 
 extern void mpfft_execute(mpfft_plan plan);
 extern void mpfft_destroy_plan(mpfft_plan plan);
-extern mpfft_plan mpfft_create_plan_1d(mpc_ptr out, mpc_ptr in, unsigned nbits, mpfr_prec_t precision, int isign);
+extern mpfft_plan mpfft_create_plan_1d(mpfc_ptr out, mpfc_ptr in, unsigned nbits, mpfr_prec_t precision, int isign);
 

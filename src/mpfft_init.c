@@ -1,7 +1,7 @@
 #include "mpfft_header.h"
 
-mpc_ptr init_mpc(mpfr_prec_t precision) {
-	mpc_ptr in = malloc(sizeof(mpc));
+mpfc_ptr init_mpfc(mpfr_prec_t precision) {
+	mpfc_ptr in = malloc(sizeof(mpfc_t));
 	mpfr_init2(in->re, precision);
 	mpfr_init2(in->im, precision);
 	mpfr_set_ui(in->re, 0, MODE);
@@ -9,8 +9,8 @@ mpc_ptr init_mpc(mpfr_prec_t precision) {
 	return in;
 }
 
-mpc_ptr init_mpc_array(unsigned N, mpfr_prec_t precision) {
-	mpc_ptr in = malloc(N*sizeof(mpc));
+mpfc_ptr init_mpfc_array(unsigned N, mpfr_prec_t precision) {
+	mpfc_ptr in = malloc(N*sizeof(mpfc_t));
 	for (unsigned j = 0; j < N; j++) {
 		mpfr_init2(in[j].re, precision);
 		mpfr_init2(in[j].im, precision);
@@ -20,12 +20,12 @@ mpc_ptr init_mpc_array(unsigned N, mpfr_prec_t precision) {
 	return in;
 }
 
-void mpc_clear(mpc_ptr in) {
+void mpfc_clear(mpfc_ptr in) {
 	mpfr_clear(in->re);
 	mpfr_clear(in->im);
 }
 
-void mpc_clear_array(mpc_ptr in, unsigned N) {
+void mpfc_clear_array(mpfc_ptr in, unsigned N) {
 	for (unsigned j = 0; j < N; j++) {
 		mpfr_clear(in[j].re);
 		mpfr_clear(in[j].im);

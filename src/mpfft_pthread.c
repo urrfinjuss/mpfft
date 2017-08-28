@@ -1,17 +1,17 @@
 #include "mpfft_pthread.h"
 
-static mpc_ptr w;
-static mpc_ptr u, t;
+static mpfc_ptr w;
+static mpfc_ptr u, t;
 static thread_data *data;
 
 void mpfft_pthread_init(mpfr_prec_t precision) {
-	w = init_mpc(precision);
-	u = init_mpc(precision);
-	t = init_mpc(precision);
+	w = init_mpfc(precision);
+	u = init_mpfc(precision);
+	t = init_mpfc(precision);
 	init_bit_operations(precision);
 }
 
-mpfft_plan mpfft_pthread_create_plan_1d(mpc_ptr out, mpc_ptr in, int nthreads, unsigned nbits, mpfr_prec_t precision, int isign){
+mpfft_plan mpfft_pthread_create_plan_1d(mpfc_ptr out, mpfc_ptr in, int nthreads, unsigned nbits, mpfr_prec_t precision, int isign){
 	mpfft_plan *p = malloc(sizeof(mpfft_plan));
 	mpfr_t tmp;
 
@@ -25,7 +25,7 @@ mpfft_plan mpfft_pthread_create_plan_1d(mpc_ptr out, mpc_ptr in, int nthreads, u
 	p->dir = isign;
 	mpfr_init2(p->re, precision);
 	mpfr_init2(p->im, precision);
-	p->W = init_mpc_array(nbits, precision);
+	p->W = init_mpfc_array(nbits, precision);
 	for (unsigned s = 0; s < nbits; s++) {
 		mpfr_const_pi(tmp, MODE);
 		mpfr_div_ui(tmp, tmp, 1 << s, MODE);
@@ -37,7 +37,7 @@ mpfft_plan mpfft_pthread_create_plan_1d(mpc_ptr out, mpc_ptr in, int nthreads, u
 }
 
 void mpfft_pthread_destroy_plan(mpfft_plan *plan) {
-	mpc_clear_array(plan->W, plan->nbits);
+	mpfc_clear_array(plan->W, plan->nbits);
 	mpfr_clear(plan->re);
 		mpfr_clear(plan->im);
 	//free(plan);
@@ -214,7 +214,7 @@ void mpfft_pthread_example(const int nthreads, mpfr_prec_t precision) {
 	printf("N = %d\nnthreads = %d\nstride = %d\n\n", N, nthreads, stride);
 	// Set Global Data
 	mpfr_t x, dx;
-	mpc_ptr F = init_mpc_array(N, precision);
+	mpfc_ptr F = init_mpfc_array(N, precision);
 	mpfr_init2(x, precision);
 	mpfr_init2(dx, precision);
 	mpfr_const_pi(dx, MODE);

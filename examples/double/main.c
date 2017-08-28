@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
 		printf("Running naive algorithm N^2 in serial N = %6d: ", N);
 		fft_plan plan = dft_create_plan_1d(x, y, nbits, 1, NUM_THREADS, DDFT_NAIVE);
 		clock_gettime(CLOCK_MONOTONIC, &begin);
-		for (int j = 0; j < ntimes; j++) dft_execute_pthreads(plan);
+		for (int j = 0; j < ntimes; j++) dft_execute(plan);
 		clock_gettime(CLOCK_MONOTONIC, &end);
 		elapsed = end.tv_sec - begin.tv_sec;
 		elapsed += (end.tv_nsec - begin.tv_nsec) / 1000000000.0;

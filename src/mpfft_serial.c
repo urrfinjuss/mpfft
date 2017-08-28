@@ -1,16 +1,16 @@
 #include "mpfft_serial.h"
 
-static mpc_ptr w;
-static mpc_ptr u, t;
+static mpfc_ptr w;
+static mpfc_ptr u, t;
 
 void mpfft_init(mpfr_prec_t precision) {
-	w = init_mpc(precision);
-	u = init_mpc(precision);
-	t = init_mpc(precision);
+	w = init_mpfc(precision);
+	u = init_mpfc(precision);
+	t = init_mpfc(precision);
 	init_bit_operations(precision);
 }
 
-mpfft_plan mpfft_create_plan_1d(mpc_ptr out, mpc_ptr in, unsigned nbits, mpfr_prec_t precision, int isign){
+mpfft_plan mpfft_create_plan_1d(mpfc_ptr out, mpfc_ptr in, unsigned nbits, mpfr_prec_t precision, int isign){
 	mpfft_plan *p = malloc(sizeof(mpfft_plan));
 	mpfr_t tmp;
 
@@ -23,7 +23,7 @@ mpfft_plan mpfft_create_plan_1d(mpc_ptr out, mpc_ptr in, unsigned nbits, mpfr_pr
 	p->dir = isign;
 	mpfr_init2(p->re, precision);
 	mpfr_init2(p->im, precision);
-	p->W = init_mpc_array(nbits, precision);
+	p->W = init_mpfc_array(nbits, precision);
 	for (unsigned s = 0; s < nbits; s++) {
 		mpfr_const_pi(tmp, MODE);
 		mpfr_div_ui(tmp, tmp, 1 << s, MODE);
@@ -35,7 +35,7 @@ mpfft_plan mpfft_create_plan_1d(mpc_ptr out, mpc_ptr in, unsigned nbits, mpfr_pr
 }
 
 void mpfft_destroy_plan(mpfft_plan plan) {
-	mpc_clear_array(plan.W, plan.nbits);
+	mpfc_clear_array(plan.W, plan.nbits);
 	mpfr_clear(plan.re);
 	mpfr_clear(plan.im);
 }

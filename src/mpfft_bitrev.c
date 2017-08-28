@@ -7,7 +7,7 @@ void init_bit_operations(mpfr_prec_t precision) {
 	mpfr_init2(tempi, precision);
 }
 
-void mpfr_bit_reverse(mpc_ptr in, unsigned nbits) {
+void mpfr_bit_reverse(mpfc_ptr in, unsigned nbits) {
 	for (int n  = 1; n < 1<<nbits; n++) {
 		int nreversed = n;
 		int count = nbits-1;
@@ -29,7 +29,7 @@ void mpfr_bit_reverse(mpc_ptr in, unsigned nbits) {
 	}
 }
 
-void mpfr_bit_reverse_copy(mpc_ptr out, mpc_ptr in, unsigned nbits) {
+void mpfr_bit_reverse_copy(mpfc_ptr out, mpfc_ptr in, unsigned nbits) {
 	if (out == in) printf("Error: In-Place Transform!\n");
 	for (int j = 0; j < 1<<nbits; j++) {
 		mpfr_set(out[j].re, in[j].re, MODE);

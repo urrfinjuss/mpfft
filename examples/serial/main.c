@@ -3,7 +3,7 @@
 
 int main() {
 	FILE *fh_log = fopen("mpfft_bench.log","a");
-	const mpfr_prec_t precision = 128;
+	const mpfr_prec_t precision = 256;
 	fprintf(fh_log, "# 1. FFT size 2. Avg. time per FFT\n# Precision %u bits\n\n", (unsigned) precision);
 	fclose(fh_log);
 
@@ -13,8 +13,8 @@ int main() {
 	mpfr_printf("Benchmark FFT (Danielson-Lanczos) Performance:\n");
 	for (unsigned int nbits = 6; nbits < 11; nbits++) {
 		unsigned int N = 1<<nbits;
-		mpc *f = init_mpc_array(N, precision);
-		mpc *F = init_mpc_array(N, precision);
+		mpfc_t *f = init_mpfc_array(N, precision);
+		mpfc_t *F = init_mpfc_array(N, precision);
 		// set initial data
 		mpfr_t x, y, scale;
 		mpfr_inits2(precision, x, y, scale, (mpfr_ptr) NULL);
@@ -52,11 +52,11 @@ int main() {
 		sprintf(fname, "fft_n%d.txt", 1 << nbits);
 		FILE *fhout = fopen(fname, "w");
 		for (int j = 0; j < 1<<nbits; j++) {
-			mpfr_fprintf(fhout, "%6d\t%36.26Re\t%36.26Re\n", j, F[j].re, F[j].im);
+			mpfr_fprintf(fhout, "%6d\t%49.41Re\t%49.41Re\n", j, F[j].re, F[j].im);
 		}
 		fclose(fhout);
-		mpc_clear_array(f, N);
-		mpc_clear_array(F, N);
+		mpfc_clear_array(f, N);
+		mpfc_clear_array(F, N);
 	}
 
 	fh_log = fopen("mpfft_bench.log","a");
